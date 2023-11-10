@@ -3,11 +3,12 @@
 #ifndef CUDOKU_CELL_H
 #define CUDOKU_CELL_H
 
+typedef unsigned int Options;
+
 typedef struct Cell{
-    int x;
-    int y;
-    int val; // Zero for empty
-    int options;
+    char x;
+    char y;
+    Options options; // Bitfield, rightmost = 1, leftmost = 9, solved cell has only one option
     char solveBased;
     int preset;
 } Cell;
@@ -15,7 +16,7 @@ typedef struct Cell{
 /*
     @brief Checks if an array of cells has all values
 */
-int checkAllValues(Cell* cells[]);
+char checkAllValues(Cell* cells[]);
 
 
 /*
@@ -24,7 +25,7 @@ int checkAllValues(Cell* cells[]);
     @param value: value for the new cell
     @return: new cell struct
 */
-Cell newCell(int x, int y, int value);
+Cell newCell(int x, int y, unsigned char value);
 
 /*
     @param x: x coordinate of cell
@@ -38,15 +39,19 @@ Cell emptyCell(int x, int y);
     @param cell: cell to print
     @return: void
 */
-void printCell(Cell cell);
+void printCell(Cell* cell);
 
 /*
     @brief: counts the number of options a cell has
     @param cell: cell to count options of
     @return: number of options
 */
-int cellOpCount(Cell cell);
+char cellOpCount(Cell* cell);
 
 void printCellOptions(Cell* cell);
+
+char cellValue(Cell* c);
+
+char cellSolved(Cell* cell);
 
 #endif //CUDOKU_CELL_H

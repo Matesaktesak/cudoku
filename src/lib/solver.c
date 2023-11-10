@@ -1,22 +1,15 @@
 #include "solver.h"
 
-int removeOptionFromGroup(int o, Cell* cells[]){
-    if(o == 0) return 0;
-    int solved = 0;
+int removeOptionFromGroup(Options o, Cell* cells[]){ // Removes an option from a group of cells
+    int solved = 0; // Number of cells solved (for reporting)
 
-    for(int i = 0; i< 9; i++){
-        Cell* cell = cells[i];
-        if(cell->val != 0) continue; // Skip solved cells
+    for(int i = 0; i< 9; i++){ // For each cell in the group
+        Cell* cell = cells[i]; // Just a 'macro', hopefully the compiler optimizes this
+        if(cellSolved(cell)) continue; // Skip solved cells
 
-        cell->options &= ~(1 << o-1); // Remove option from cell
+        cell->options &= ~o; // Remove option from cell
 
-        if(cellOpCount(*cell) == 1){ // If cell has only one option left
-            int val = 0;
-            for(; val < 9; val++){
-                if((cell->options >> val) & 1) break;
-            }
-            cell->val = val+1;
-            cell->options = 0;
+        if(cellSolved(cell)){ // If cell has only one option left
             cell->solveBased = 'l';
             solved++;
         }
@@ -31,11 +24,14 @@ int removeOptions(Playfield* field){
 
     while(reduction) {
         reduction = 0;
-        for(int i = 0; i < 9; i++) for(int j = 0; j < 9; j++) {
-            reduction += removeOptionFromGroup(field->rows[i][j]->val, field->rows[i]);
-            reduction += removeOptionFromGroup(field->cols[i][j]->val, field->cols[i]);
-            reduction += removeOptionFromGroup(field->blocks[i][j]->val, field->blocks[i]);
+
+        for(char i = 0; i < 9*9; i++) if(cellSolved(field->cells[i])){
+            const Cell* c = field->cells[i];
+            reduction += removeOptionFromGroup(c->options, field->rows[c->y]);
+            reduction += removeOptionFromGroup(c->options, field->cols[c->x]);
+            reduction += removeOptionFromGroup(c->options, field->blocks[(c->x/3) + (c->y/3)*3]);
         }
+
         printf("Reduction: %d\n", reduction);
         totalReduction += reduction;
     }

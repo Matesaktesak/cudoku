@@ -4,6 +4,7 @@ Playfield playfieldFromCells(Cell* cells){
     Playfield p;
     for(int i = 0; i < 81; i++){
         Cell* cell = cells+i;
+        p.cells[cell->x + cell->y*9] = cell;
         //printCell(*cell);
         p.rows[cell->y][cell->x] = cell;
         p.cols[cell->x][cell->y] = cell;
@@ -24,18 +25,18 @@ void drawPlayfield(Playfield p) {
             if(i % 3 != 0) printf("│"); else printf("┃");
             
             if(p.rows[r][i]->preset) printf("\x1B[1m");
-            printf(" %c ", p.rows[r][i]->val != 0 ? p.rows[r][i]->val + '0' : ' ');
+            printf(" %c ", cellSolved(p.rows[r][i]) ? cellValue(p.rows[r][i]) + '0' : ' ');
             if(p.rows[r][i]->preset) printf("\x1B[0m");
         }
 
         int rowsum = 0;
-        for(int n = 0; n < 9; n++) rowsum += p.rows[r][n]->val;
+        for(int n = 0; n < 9; n++) rowsum += cellValue(p.rows[r][n]);
         printf("┃%d\n", rowsum);
     }
     printf("  ");
     for(int c = 0; c < 9; c++){
         int colsum = 0;
-        for(int n = 0; n < 9; n++) colsum += p.cols[c][n]->val;
+        for(int n = 0; n < 9; n++) colsum += cellValue(p.cols[c][n]);
         printf("%d  ", colsum);
     }
     printf("\n");

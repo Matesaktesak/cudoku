@@ -11,7 +11,7 @@
     @param cells: array of cells to remove option from
     @return: number of cells solved by this operation
 */
-int removeOptionFromGroup(int o, Cell* cells[]);
+int removeOptionFromGroup(Options o, Cell* cells[]);
 
 
 /*
