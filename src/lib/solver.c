@@ -32,7 +32,7 @@ int removeOptions(Playfield* field){
             reduction += removeOptionFromGroup(c->options, field->blocks[(c->x/3) + (c->y/3)*3]);
         }
 
-        printf("Reduction: %d\n", reduction);
+        //printf("Reduction: %d\n", reduction);
         totalReduction += reduction;
     }
 
