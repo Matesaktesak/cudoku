@@ -22,10 +22,11 @@ int cellOpCount(Cell cell){
     return n;
 }
 
-int checkAllValues(Cell* cells){
+int checkAllValues(Cell* cells[]){
     int vals = 0;
     for(int i = 0; i < 9; i++){
-        vals |= 1 << cells[i].val;
+        if(cells[i]->val == 0) return 0;
+        vals |= 1 << cells[i]->val-1;
     }
 
     //printf("%s\n", vals == 0b111111111 ? "Solved" : "Not solved");

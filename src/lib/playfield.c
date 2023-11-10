@@ -44,14 +44,14 @@ void drawPlayfield(Playfield p) {
 int checkSolved(Playfield p){
     int solved = 0;
     for(int i = 0; i < 9; i++) {
-        solved += checkAllValues((Cell*)p.rows[i]);
+        solved += checkAllValues(p.rows[i]);
     }
     for(int i = 0; i < 9; i++) {
-        solved += checkAllValues((Cell*)p.cols[i]);
+        solved += checkAllValues(p.cols[i]);
     }
     for(int i = 0; i < 9; i++) {
-        solved += checkAllValues((Cell*)p.blocks[i]);
+        solved += checkAllValues(p.blocks[i]);
     }
-
+    //printf("Solved: %d\n", solved);
     return solved == 27;
 }

@@ -15,7 +15,7 @@ typedef struct Cell{
 /*
     @brief Checks if an array of cells has all values
 */
-int checkAllValues(Cell* cells);
+int checkAllValues(Cell* cells[]);
 
 
 /*
