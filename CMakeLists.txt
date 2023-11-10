@@ -5,4 +5,4 @@ project(cudoku)
 
 set(SOURCE_FILES)
 
-add_executable(cudoku ./src/main.c ./src/lib/cell.c ./src/lib/cell.h ./src/lib/playfield.c ./src/lib/playfield.h)
+add_executable(cudoku ./src/main.c ./src/lib/cell.c ./src/lib/cell.h ./src/lib/playfield.c ./src/lib/playfield.h ./src/lib/solver.c ./src/lib/solver.h)

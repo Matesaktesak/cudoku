@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/debug/cudoku",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "CMake: debug"
+        }
+    ]
+}
