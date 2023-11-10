@@ -42,3 +42,27 @@ int removeOptions(Playfield* field){
 
     return totalReduction;
 }
+
+int onlyInReg(Cell* reg[]){
+    int reduction = 0;
+    for(int n = 1; n<=9; n++){
+        int count = 0;
+        Cell* found = reg[0];
+        for(int i = 0; i < 9; i++){
+            if(reg[i]->val) continue; // Skip solved cells
+            if((reg[i]->options >> n-1) & 1){
+                count++;
+                found = reg[i];
+            }
+        }
+
+        if(count == 1){
+            found->val = n;
+            found->options = 0;
+            found->solveBased = 'o';
+            reduction++;
+        }
+    }
+
+    return reduction;
+}

@@ -8,7 +8,7 @@
 Cell* loadCells(char* path);
 
 int main(){
-    Cell* cells = loadCells("./saves/preset1.cudoku");
+    Cell* cells = loadCells("./saves/preset2.cudoku");
 
     // for (int i = 0; i < 9 * 9; i++){
     //     //cells[i] = emptyCell(i % 9, (int)i / 9);
@@ -19,14 +19,30 @@ int main(){
     drawPlayfield(p);
 
     removeOptions(&p);
-    // for(int i = 0; i < 9; i++){
-    //     printCell(*(p.rows[0][i]));
-    // }
 
-    for (int i = 0; i < 9 * 9; i++){
-        //cells[i] = emptyCell(i % 9, (int)i / 9);
-        printCell(cells[i]);
+    drawPlayfield(p);
+
+    printf("Only in reg strategy:\n");
+
+    int reduction = 1;
+    while(reduction){
+        reduction = 0;
+        for(int i = 0; i < 9; i++){
+            onlyInReg(p.rows[i]);
+        }
+        for(int i = 0; i < 9; i++){
+            onlyInReg(p.cols[i]);
+        }
+        for(int i = 0; i < 9; i++){
+            onlyInReg(p.blocks[i]);
+        }
+        printf("Reduction: %d\n", reduction);
     }
+
+    // for (int i = 0; i < 9 * 9; i++){
+    //     //cells[i] = emptyCell(i % 9, (int)i / 9);
+    //     printCell(cells[i]);
+    // }
 
     drawPlayfield(p);
 

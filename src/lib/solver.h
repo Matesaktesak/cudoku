@@ -21,4 +21,6 @@ int removeOptionFromGroup(int o, Cell* cells[]);
 */
 int removeOptions(Playfield* field);
 
+int onlyInReg(Cell* reg[]);
+
 #endif //CUDOKU_SOLVER_H
