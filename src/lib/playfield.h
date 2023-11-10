@@ -1,4 +1,8 @@
+#include <stdio.h>
 #include "cell.h"
+
+#ifndef CUDOKU_PLAYFIELD_H
+#define CUDOKU_PLAYFIELD_H
 
 typedef struct Playfield{
     Cell* rows[9][9];
@@ -18,3 +22,11 @@ Playfield playfieldFromCells(Cell* cells);
     @param: p: Playfield to draw
 */
 void drawPlayfield(Playfield p);
+
+/*
+    @param p: Playfield to check
+    @return: 1 if playfield is solved, 0 if not
+*/
+int checkSolved(Playfield p);
+
+#endif //CUDOKU_PLAYFIELD_H

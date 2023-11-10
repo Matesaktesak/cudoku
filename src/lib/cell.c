@@ -9,37 +9,30 @@ Cell emptyCell(int x, int y) {
 }
 
 void printCell(Cell cell){
-    printf("Cell [%d, %d]: v = %d%s%s\n", cell.x, cell.y, cell.val, cell.preset ? " (preset)" : "", cell.options || cell.preset ? "" : " (solved)");
+    printf("Cell [%d, %d]: v = %d, options:", cell.x, cell.y, cell.val);
+    printCellOptions(&cell);
+    printf("%s%s\n", cell.preset ? " (preset)" : "", cell.options || cell.preset ? "" : " (solved)");
 }
 
 int cellOpCount(Cell cell){
-    int n; 
+    int n = 0; 
     for(int i = 0; i < 9; i++){
         n += (cell.options >> i) & 1;
     }
     return n;
 }
 
-int removeOption(int o, Cell* cells){
-    int solved = 0;
-
-    for(int i = 0; i< 9; i++){
-        Cell* cell = (cells + i);
-        if(!cell->val) continue; // Skip solved cells
-
-        cell->options &= ~(1 << o); // Remove option from cell
-
-        if(cellOpCount(*cell) == 1){ // If cell has only one option left
-            int val = 0;
-            for(; val < 9; val++){
-                if((cell->options >> val) & 1) break;
-            }
-            cell->val = val;
-            cell->options = 0;
-            cell->solveBased = 'l';
-            solved++;
-        }
+int checkAllValues(Cell* cells){
+    int vals = 0;
+    for(int i = 0; i < 9; i++){
+        vals |= 1 << cells[i].val;
     }
 
-    return solved;
+    //printf("%s\n", vals == 0b111111111 ? "Solved" : "Not solved");
+
+    return vals == 0b111111111;
+}
+
+void printCellOptions(Cell* cell){
+    for(int i = 0; i < 9; i++) if((cell->options >> i) & 1) printf("%d",  i+1); else printf(" ");
 }

@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifndef CUDOKU_CELL_H
 #define CUDOKU_CELL_H
 
@@ -9,6 +11,12 @@ typedef struct Cell{
     char solveBased;
     int preset;
 } Cell;
+
+/*
+    @brief Checks if an array of cells has all values
+*/
+int checkAllValues(Cell* cells);
+
 
 /*
     @param x: x coordinate of cell
@@ -39,12 +47,6 @@ void printCell(Cell cell);
 */
 int cellOpCount(Cell cell);
 
-/*
-    @brief: removes an option from a cell
-    @param o: option to remove
-    @param cells: array of cells to remove option from
-    @return: number of cells solved by this operation
-*/
-int removeOption(int o, Cell* cells);
+void printCellOptions(Cell* cell);
 
 #endif //CUDOKU_CELL_H
