@@ -41,7 +41,7 @@ int main(){
 
     for (int i = 0; i < 9 * 9; i++){
         //cells[i] = emptyCell(i % 9, (int)i / 9);
-        printCell(cells[i]);
+        printCell(&cells[i]);
     }
 
     drawPlayfield(p);
@@ -67,7 +67,7 @@ Cell* loadCells(char* path){
 
     for(int i = 0; i < 9*9; i++){
         *(cells+i) = emptyCell(i%9, (int)i/9);
-        printCell(cells[i]);
+        // printCell(&cells[i]);
     }
 
     FILE* f = fopen(path, "r");
