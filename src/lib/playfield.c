@@ -2,8 +2,11 @@
 
 Playfield playfieldFromCells(Cell* cells){
     Playfield p;
+    p.solvedCells = 0;
     for(int i = 0; i < 81; i++){
         Cell* cell = cells+i;
+        p.solvedCells += cell->solveBased == 'p';
+
         p.cells[cell->x + cell->y*9] = cell;
         //printCell(*cell);
         p.rows[cell->y][cell->x] = cell;

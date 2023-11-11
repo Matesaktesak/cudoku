@@ -9,6 +9,8 @@ typedef struct Playfield{
     Cell* cols[9][9];
     Cell* blocks[9][9];
     Cell* cells[9*9];
+
+    char solvedCells; // Number of solved cells
 } Playfield;
 
 /*
