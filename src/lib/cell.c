@@ -44,7 +44,7 @@ char checkAllValues(Cell* cells[]){
     Options vals = 0;
     for(int i = 0; i < 9; i++){
         if(!cellSolved(cells[i])) return 0; // If cell has multiple options, it is not solved
-        vals |= 1 << cells[i]->options; // Binary add the option to the value bitfield
+        vals |= cells[i]->options; // Binary add the option to the value bitfield
     }
 
     //printf("%s\n", vals == 0b111111111 ? "Solved" : "Not solved");
