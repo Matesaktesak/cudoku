@@ -28,21 +28,21 @@ int main(){
     while(reduction){
         reduction = 0;
         for(int i = 0; i < 9; i++){
-            onlyInReg(p.rows[i]);
+            reduction += onlyInReg(p.rows[i]);
         }
         for(int i = 0; i < 9; i++){
-            onlyInReg(p.cols[i]);
+            reduction += onlyInReg(p.cols[i]);
         }
         for(int i = 0; i < 9; i++){
-            onlyInReg(p.blocks[i]);
+            reduction += onlyInReg(p.blocks[i]);
         }
         printf("Reduction: %d\n", reduction);
     }
 
-    // for (int i = 0; i < 9 * 9; i++){
-    //     //cells[i] = emptyCell(i % 9, (int)i / 9);
-    //     printCell(cells[i]);
-    // }
+    for (int i = 0; i < 9 * 9; i++){
+        //cells[i] = emptyCell(i % 9, (int)i / 9);
+        printCell(cells[i]);
+    }
 
     drawPlayfield(p);
 
