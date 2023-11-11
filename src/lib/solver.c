@@ -41,22 +41,21 @@ int removeOptions(Playfield* field){
 
 int onlyInReg(Cell* reg[]){
     int reduction = 0;
-    for(int n = 1; n<=9; n++){
-        int count = 0;
-        Cell* found = reg[0];
-        for(int i = 0; i < 9; i++){
-            if(reg[i]->val) continue; // Skip solved cells
-            if((reg[i]->options >> n-1) & 1){
-                count++;
-                found = reg[i];
-            }
-        }
+    for(int n = 1; n <= 9; n++){ // For every cell in the region
+        if(cellSolved(reg[n])) continue; // Skip solved cells
+        // Binary sum the other cells options
+        Options sum = 0;
+        for(int i = 0; i < 9; i++) if(i != n) sum |= reg[i]->options;
 
-        if(count == 1){
-            found->val = n;
-            found->options = 0;
-            found->solveBased = 'o';
-            reduction++;
+        // If the cell has an option that is not in the sum
+        if(reg[n]->options & ~sum){
+            reg[n]->options &= ~sum; // Remove all other options
+            reg[n]->solveBased = 'o'; // Set the diagnostic type to 'only in region'
+
+            // Remove this option from all other cells in the region (and report the result as if done by this op... xd)
+            reduction += removeOptionFromGroup(reg[n]->options, reg);
+
+            reduction++; // Report the solved cell
         }
     }
 
