@@ -48,10 +48,25 @@ void printCell(Cell* cell);
 */
 char cellOpCount(Cell* cell);
 
+/*
+    @brief: prints the options of a cell as a bitfield multiplied by '123456789' (eg 0b101010101 -> '9 7 5 3 1')
+    @param cell: cell to print options of
+    @return: void
+*/
 void printCellOptions(Cell* cell);
 
+/*
+    @brief: gets the value of a cell
+    @param cell: cell to get value of
+    @return: value of cell (1-9)
+*/
 char cellValue(Cell* c);
 
+/*
+    @brief: checks if a cell is solved
+    @param cell: cell to check
+    @return: 1 if solved, 0 if not
+*/
 char cellSolved(Cell* cell);
 
 #endif //CUDOKU_CELL_H
