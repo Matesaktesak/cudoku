@@ -45,17 +45,35 @@ void drawPlayfield(Playfield p) {
     printf("\n");
 }
 
-int checkSolved(Playfield p){
+char checkSolved(Playfield* p){
     int solved = 0;
     for(int i = 0; i < 9; i++) {
-        solved += checkAllValues(p.rows[i]);
+        solved += checkAllValues(p->rows[i]);
     }
     for(int i = 0; i < 9; i++) {
-        solved += checkAllValues(p.cols[i]);
+        solved += checkAllValues(p->cols[i]);
     }
     for(int i = 0; i < 9; i++) {
-        solved += checkAllValues(p.blocks[i]);
+        solved += checkAllValues(p->blocks[i]);
     }
     //printf("Solved: %d\n", solved);
     return solved == 27;
+}
+
+Playfield clonePlayfield(Playfield* original){
+    // Return a deep copy of the playfield
+    Playfield copy = (Playfield){};
+    copy.solvedCells = original->solvedCells;
+    for(int i = 0; i < 81; i++){
+        Cell c = *original->cells[i];
+        copy.cells[i] = &c;
+    }
+    for(int i = 0; i < 9; i++){
+        for(int n = 0; n < 9; n++){
+            copy.rows[i][n] = copy.cells[i*9+n];
+            copy.cols[i][n] = copy.cells[n*9+i];
+            copy.blocks[i][n] = copy.cells[(i%3)*3 + (i/3)*27 + (n%3) + (n/3)*9];
+        }
+    }
+    return copy;
 }

@@ -30,6 +30,8 @@ void drawPlayfield(Playfield p);
     @param p: Playfield to check
     @return: 1 if playfield is solved, 0 if not
 */
-int checkSolved(Playfield p);
+char checkSolved(Playfield* p);
+
+Playfield clonePlayfield(Playfield* original);
 
 #endif //CUDOKU_PLAYFIELD_H
