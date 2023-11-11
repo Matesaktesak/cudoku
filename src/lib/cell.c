@@ -3,7 +3,7 @@
 Cell newCell(int x, int y, unsigned char value){
     Options options = 0b111111111;
     if(value != 0) options = 1 << (value-1);
-    return (Cell){.x = x, .y = y, .preset = (value != 0), .options = options};
+    return (Cell){.x = x, .y = y, .solveBased = (value != 0) ? 'p' : NULL, .options = options};
 }
 
 Cell emptyCell(int x, int y) {
@@ -16,11 +16,12 @@ void printCell(Cell* cell){
     // printf("\n");
     char* solve;
     switch(cell->solveBased){
-        case 'l': solve = "(single option)"; break; // Last option
-        case 'o': solve = "(only in group)"; break; // Only cell with option in group¨
+        case 'p': solve = "P (preset value)"; break; // Last option
+        case 'l': solve = "L (single option)"; break; // Last option
+        case 'o': solve = "O (only in group)"; break; // Only cell with option in group
         default: solve = "";
     }
-    printf("%s %s\n", cell->preset ? " (preset)" : "", solve);
+    printf(" %s\n", solve);
 }
 
 char cellOpCount(Cell* cell){

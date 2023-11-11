@@ -24,9 +24,9 @@ void drawPlayfield(Playfield p) {
         for(int i = 0; i < 9; i++){
             if(i % 3 != 0) printf("│"); else printf("┃");
             
-            if(p.rows[r][i]->preset) printf("\x1B[1m");
+            if(p.rows[r][i]->solveBased == 'p') printf("\x1B[1m"); // If the cell was preset, make it bold
             printf(" %c ", cellSolved(p.rows[r][i]) ? cellValue(p.rows[r][i]) + '0' : ' ');
-            if(p.rows[r][i]->preset) printf("\x1B[0m");
+            if(p.rows[r][i]->solveBased == 'p') printf("\x1B[0m");
         }
 
         int rowsum = 0;

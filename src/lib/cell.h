@@ -6,11 +6,10 @@
 typedef unsigned int Options;
 
 typedef struct Cell{
-    char x;
-    char y;
+    char x; // x coordinate
+    char y; // y coordinate
     Options options; // Bitfield, rightmost = 1, leftmost = 9, solved cell has only one option
-    char solveBased;
-    int preset;
+    char solveBased; // 'p' = preset, 'l' = last option, 'o' = only in group
 } Cell;
 
 /*
