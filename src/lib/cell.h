@@ -73,6 +73,6 @@ char cellSolved(Cell* cell);
     @param path: path to file to load from
     @return: array of cells or null if failed
 */
-Cell* loadCells(char* path);
+Cell* loadCells(FILE* f);
 
 #endif //CUDOKU_CELL_H

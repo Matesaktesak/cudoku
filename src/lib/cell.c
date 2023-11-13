@@ -60,7 +60,7 @@ char cellSolved(Cell* cell){
     return !(cell->options&(cell->options-1)); // If a cells options are not a power of 2, it has multiple options and therefore isn't solved
 }
 
-Cell* loadCells(char* path){
+Cell* loadCells(FILE* f){
     Cell* cells = malloc(sizeof(Cell) * 9 * 9);
     if(cells == NULL){
         printf("Failed to allocate memory for cells\n");
@@ -70,12 +70,6 @@ Cell* loadCells(char* path){
     for(int i = 0; i < 9*9; i++){
         *(cells+i) = emptyCell(i%9, (int)i/9);
         // printCell(&cells[i]);
-    }
-
-    FILE* f = fopen(path, "r");
-    if(!f){
-        printf("Failed to open file\n");
-        return NULL;
     }
 
     int data[3];
