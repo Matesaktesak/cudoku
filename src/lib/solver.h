@@ -1,5 +1,6 @@
 #include "cell.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "playfield.h"
 
 #ifndef CUDOKU_SOLVER_H
@@ -37,10 +38,10 @@ char logicSolve(Playfield* p);
 
 /*
     @brief Solves a playfield using brute force
-    @param p: playfield to solve
+    @param p: pointer to a pointer to a playfield to solve
     @return 1 if solved, 0 if not
     @details This function is recursive and consumes a lot of memory, but should eventually solve EVERY solvable playfield
 */
-char bruteSolve(Playfield* p);
+char bruteSolve(Playfield** p);
 
 #endif //CUDOKU_SOLVER_H

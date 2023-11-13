@@ -4,6 +4,8 @@ char logicSolve(Playfield* p){
     if(p->solvedCells == 81) return 1; // If the playfield is already solved, return 1
     removeOptions(p);
     
+    //drawPlayfield(*p);
+
     int reduction = 1;
     while(reduction && p->solvedCells < 81){
         reduction = 0;
@@ -28,10 +30,10 @@ char logicSolve(Playfield* p){
     return checkSolved(p);
 }
 
-char recurse(Playfield* p);
+char recurse(Playfield** field);
 
-char bruteSolve(Playfield* p){
-    if(logicSolve(p)) return 1; // If the playfield is solvable using logic, do so and return 1
+char bruteSolve(Playfield** p){
+    if(logicSolve(*p)) return 1; // If the playfield is solvable using logic, do so and return 1
 
     // Else step into recursion (brute force)
     return recurse(p);
@@ -56,6 +58,8 @@ int removeOptionFromGroup(Options o, Cell* cells[]){ // Removes an option from a
 }
 
 int removeOptions(Playfield* field){
+    //printf("Removing invalid options...\n");
+
     int reduction = 1;
     int totalReduction = 0;
 
@@ -99,7 +103,12 @@ int onlyInReg(Cell* reg[]){
     return reduction;
 }
 
-char recurse(Playfield* p){
+int recourseCounter = 0;
+char recurse(Playfield** field){
+    printf("Recoursing for the %d. time\n", ++recourseCounter); // Just for debugging
+
+    Playfield* p = *field; // Just a 'macro', hopefully the compiler optimizes this
+
     char minimumCount = 2;
     for(int i = 0; i < 81; i++){ // For every cell
         if(cellSolved(p->cells[i])) continue;   // Skip solved cells
@@ -107,10 +116,13 @@ char recurse(Playfield* p){
             for(int n = 0; n < 9; n++){ // For every option
                 if(!(p->cells[i]->options & (1 << n))) continue; // Only try options that are still available
 
-                Playfield copy = clonePlayfield(p); // Prepare a deep copy of the playfield
-                copy.cells[i]->options = 1 << n;  // Presume this option is correct
+                Playfield* copy = malloc(sizeof(Playfield)); // Allocate space for a new playfield
+                copy = clonePlayfield(p); // Prepare a deep copy of the playfield
+                copy->cells[i]->options = 1 << n;  // Presume this option is correct
                 if(bruteSolve(&copy)){  // Try to brute solve the rest of the copied field - thus recursing
-                    *p = copy;  // If it works, copy the solved field to the original
+                    copy->cells[i]->solveBased = 'b'; // If it works, set the diagnostic type to 'brute force'
+                    copy->solvedCells++; // And report the solved cell
+                    *field = copy;  // If it works, copy the solved field to the original
                     return 1;   // Return 1 and so break the entire recursion
                 }
             }

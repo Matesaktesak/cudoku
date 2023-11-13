@@ -8,45 +8,24 @@
 Cell* loadCells(char* path);
 
 int main(){
-    Cell* cells = loadCells("./saves/preset2.cudoku");
-
-    // for (int i = 0; i < 9 * 9; i++){
-    //     //cells[i] = emptyCell(i % 9, (int)i / 9);
-    //     printCell(cells[i]);
-    // }
+    Cell* cells = loadCells("./saves/preset4.cudoku");
 
     Playfield p = playfieldFromCells(cells);
+    printf("Loaded field:\n");
     drawPlayfield(p);
 
-    removeOptions(&p);
+    Playfield* pptr = &p;
+
+    char solved = bruteSolve(&pptr);
+
+    p = *pptr;
 
     drawPlayfield(p);
+    printf("%s, %d cells solved.\n", solved ? "Playfield is solved" : "Playfield is not solved", p.solvedCells);
 
-    printf("Only in reg strategy:\n");
-
-    int reduction = 1;
-    while(reduction){
-        reduction = 0;
-        for(int i = 0; i < 9; i++){
-            reduction += onlyInReg(p.rows[i]);
-        }
-        for(int i = 0; i < 9; i++){
-            reduction += onlyInReg(p.cols[i]);
-        }
-        for(int i = 0; i < 9; i++){
-            reduction += onlyInReg(p.blocks[i]);
-        }
-        printf("Reduction: %d\n", reduction);
+    if(p.solvedCells != 81) for(int i = 0; i < 9 * 9; i++) if(!cellSolved(p.cells[i])){
+        printCell(p.cells[i]);
     }
-
-    for (int i = 0; i < 9 * 9; i++){
-        //cells[i] = emptyCell(i % 9, (int)i / 9);
-        printCell(&cells[i]);
-    }
-
-    drawPlayfield(p);
-
-    printf("%s\n", checkSolved(p) ? "Playfield is solved" : "Playfield is not solved");
 
     free(cells);
 

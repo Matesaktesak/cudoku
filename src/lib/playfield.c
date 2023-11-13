@@ -20,10 +20,10 @@ Playfield playfieldFromCells(Cell* cells){
 void drawPlayfield(Playfield p) {
     printf("   0   1   2   3   4   5   6   7   8\n");
     for(int r = 0; r < 10; r++){
-        if(r % 3 != 0) printf(" ┃───┼───┼───┃───┼───┼───┃───┼───┼───┃ \n"); else printf(" %s━━━━━━━━━━━%s━━━━━━━━━━━%s━━━━━━━━━━━%s\n", r == 0 ? "┏" : (r == 9 ? "┗" :"┣"), r == 0 ? "┳" : (r == 9 ? "┻" : "╋"),r == 0 ? "┳" : (r == 9 ? "┻" : "╋"), r == 0 ? "┓" : (r==9 ? "┛" : "┫"));
+        if(r % 3 != 0) printf("  ┃───┼───┼───┃───┼───┼───┃───┼───┼───┃ \n"); else printf("  %s━━━━━━━━━━━%s━━━━━━━━━━━%s━━━━━━━━━━━%s\n", r == 0 ? "┏" : (r == 9 ? "┗" :"┣"), r == 0 ? "┳" : (r == 9 ? "┻" : "╋"),r == 0 ? "┳" : (r == 9 ? "┻" : "╋"), r == 0 ? "┓" : (r==9 ? "┛" : "┫"));
         if(r == 9) break;
 
-        printf("%d", r);
+        printf("%d ", r);
         for(int i = 0; i < 9; i++){
             if(i % 3 != 0) printf("│"); else printf("┃");
             
@@ -34,7 +34,7 @@ void drawPlayfield(Playfield p) {
 
         int rowsum = 0;
         for(int n = 0; n < 9; n++) rowsum += cellValue(p.rows[r][n]);
-        printf("┃%d\n", rowsum);
+        printf("┃ %d\n", rowsum);
     }
     printf("  ");
     for(int c = 0; c < 9; c++){
@@ -60,20 +60,34 @@ char checkSolved(Playfield* p){
     return solved == 27;
 }
 
-Playfield clonePlayfield(Playfield* original){
+Playfield* clonePlayfield(Playfield* original){
     // Return a deep copy of the playfield
-    Playfield copy = (Playfield){};
-    copy.solvedCells = original->solvedCells;
+    Playfield* copy = malloc(sizeof(Playfield));
+    *copy = (Playfield){
+        .cells = malloc(sizeof(Cell*)*81),
+        .rows = malloc(sizeof(Cell*)*9*9),
+        .cols = malloc(sizeof(Cell*)*9*9),
+        .blocks = malloc(sizeof(Cell*)*9*9),
+        .solvedCells = original->solvedCells
+    };
+    Cell* cellsCopy = (Cell*)malloc(sizeof(Cell)*81);
+
     for(int i = 0; i < 81; i++){
-        Cell c = *original->cells[i];
-        copy.cells[i] = &c;
+        volatile Cell cellClone = *(original->cells[i]);
+        cellsCopy[i] = cellClone;
     }
+
+    for(int i = 0; i < 81; i++){
+        copy->cells[i] = &cellsCopy[i];
+    }
+
     for(int i = 0; i < 9; i++){
         for(int n = 0; n < 9; n++){
-            copy.rows[i][n] = copy.cells[i*9+n];
-            copy.cols[i][n] = copy.cells[n*9+i];
-            copy.blocks[i][n] = copy.cells[(i%3)*3 + (i/3)*27 + (n%3) + (n/3)*9];
+            copy->rows[i][n] = copy->cells[i*9+n];
+            copy->cols[i][n] = copy->cells[n*9+i];
+            copy->blocks[i][n] = copy->cells[(i%3)*3 + (i/3)*27 + (n%3) + (n/3)*9];
         }
     }
+    
     return copy;
 }

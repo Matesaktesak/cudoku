@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "cell.h"
 
 #ifndef CUDOKU_PLAYFIELD_H
@@ -32,6 +33,6 @@ void drawPlayfield(Playfield p);
 */
 char checkSolved(Playfield* p);
 
-Playfield clonePlayfield(Playfield* original);
+Playfield* clonePlayfield(Playfield* original);
 
 #endif //CUDOKU_PLAYFIELD_H
