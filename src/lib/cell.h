@@ -68,4 +68,11 @@ char cellValue(Cell* c);
 */
 char cellSolved(Cell* cell);
 
+/*
+    @brief Loads a cell array from a file
+    @param path: path to file to load from
+    @return: array of cells or null if failed
+*/
+Cell* loadCells(char* path);
+
 #endif //CUDOKU_CELL_H

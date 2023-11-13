@@ -59,3 +59,43 @@ void printCellOptions(Cell* cell){
 char cellSolved(Cell* cell){
     return !(cell->options&(cell->options-1)); // If a cells options are not a power of 2, it has multiple options and therefore isn't solved
 }
+
+Cell* loadCells(char* path){
+    Cell* cells = malloc(sizeof(Cell) * 9 * 9);
+    if(cells == NULL){
+        printf("Failed to allocate memory for cells\n");
+        return NULL;
+    }
+
+    for(int i = 0; i < 9*9; i++){
+        *(cells+i) = emptyCell(i%9, (int)i/9);
+        // printCell(&cells[i]);
+    }
+
+    FILE* f = fopen(path, "r");
+    if(!f){
+        printf("Failed to open file\n");
+        return NULL;
+    }
+
+    int data[3];
+    int count = 0;
+    do{
+        char input = fgetc(f);
+        if(input == ',') count++;
+        if(input == '\n' || input == EOF){
+            cells[data[0] + data[1]*9] = newCell(data[0], data[1], data[2]);
+            // printCell(cells[data[0] + data[1]*9]);
+            count = 0;
+            if(input == EOF) break;
+            continue;
+        }
+        if(input >= '0' && input <= '9'){
+            data[count] = input - '0';
+        }
+    } while(1);
+
+    fclose(f);
+
+    return cells;
+}
