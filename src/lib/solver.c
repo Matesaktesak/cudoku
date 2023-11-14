@@ -129,5 +129,7 @@ char recurse(Playfield** field){
         }
     }
 
+    // TODO: In this case, it shouldn't overwrite the array
+    printf("Playfield cannot be solved\n");
     return 0;
 }
