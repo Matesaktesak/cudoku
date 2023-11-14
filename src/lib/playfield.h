@@ -25,7 +25,7 @@ Playfield playfieldFromCells(Cell* cells);
     @brief: Render the playfield to stdout
     @param: p: Playfield to draw
 */
-void drawPlayfield(Playfield p);
+void drawPlayfield(Playfield p, Cell* selected);
 
 /*
     @param p: Playfield to check

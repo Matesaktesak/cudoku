@@ -17,8 +17,11 @@ Playfield playfieldFromCells(Cell* cells){
     return p;
 }
 
-void drawPlayfield(Playfield p) {
-    printf("   0   1   2   3   4   5   6   7   8\n");
+#define ANSI_HIGHLIGHT "\x1b[42m"
+#define ANSI_RESET  "\x1b[0m"
+
+void drawPlayfield(Playfield p, Cell* selected) {
+    printf("    0   1   2   3   4   5   6   7   8\n");
     for(int r = 0; r < 10; r++){
         if(r % 3 != 0) printf("  ┃───┼───┼───┃───┼───┼───┃───┼───┼───┃ \n"); else printf("  %s━━━━━━━━━━━%s━━━━━━━━━━━%s━━━━━━━━━━━%s\n", r == 0 ? "┏" : (r == 9 ? "┗" :"┣"), r == 0 ? "┳" : (r == 9 ? "┻" : "╋"),r == 0 ? "┳" : (r == 9 ? "┻" : "╋"), r == 0 ? "┓" : (r==9 ? "┛" : "┫"));
         if(r == 9) break;
@@ -28,7 +31,11 @@ void drawPlayfield(Playfield p) {
             if(i % 3 != 0) printf("│"); else printf("┃");
             
             if(p.rows[r][i]->solveBased == 'p') printf("\x1B[1m"); // If the cell was preset, make it bold
-            printf(" %c ", cellSolved(p.rows[r][i]) ? cellValue(p.rows[r][i]) + '0' : ' ');
+            if(p.rows[r][i] != selected){
+                printf(" %c ", cellSolved(p.rows[r][i]) ? cellValue(p.rows[r][i]) + '0' : ' ');
+            } else {
+                printf(ANSI_HIGHLIGHT " %c " ANSI_RESET, cellSolved(p.rows[r][i]) ? cellValue(p.rows[r][i]) + '0' : ' ');
+            }
             if(p.rows[r][i]->solveBased == 'p') printf("\x1B[0m");
         }
 
@@ -36,7 +43,7 @@ void drawPlayfield(Playfield p) {
         for(int n = 0; n < 9; n++) rowsum += cellValue(p.rows[r][n]);
         printf("┃ %d\n", rowsum);
     }
-    printf("  ");
+    printf("   ");
     for(int c = 0; c < 9; c++){
         int colsum = 0;
         for(int n = 0; n < 9; n++) colsum += cellValue(p.cols[c][n]);
