@@ -4,23 +4,51 @@
 #include "./lib/cell.h"
 #include "./lib/playfield.h"
 #include "./lib/solver.h"
-
-Cell* loadCells(char* path);
+#include "./lib/ui.h"
 
 int main(){
-    Cell* cells = loadCells("./saves/preset4.cudoku");
+    printf("\x1B[1mCudoku\x1B[0m\n");
+    
+    start: ;// goto start; is used to restart the program after a solve
+    Cell* selectedCell = NULL;
+    char selected[2] = {4,4};
 
+    FILE* f = getFile();
+
+    Cell* cells = loadCells(f);
     Playfield p = playfieldFromCells(cells);
     printf("Loaded field:\n");
-    drawPlayfield(p);
+    drawPlayfield(p, NULL);
 
+    char input[5];
+    while(1){
+        if(!scanf("%s", input)) continue;
+        if(strcmp(input, "exit") == 0) return 0;
+        if(strcmp(input, "solve") == 0) goto solve;
+
+        if(strcmp(input, "up") == 0) selected[1]--; // Up
+        if(strcmp(input, "down") == 0) selected[1]++; // Down
+        if(strcmp(input, "right") == 0) selected[0]++; // Right
+        if(strcmp(input, "left") == 0) selected[0]--; // Left
+        selectedCell = p.cells[selected[0] + selected[1]*9];
+
+        if(strcmp(input, "set") == 0) {
+            selectedCell->options = 1 << (getNumber("Value: ")-1);
+        }
+
+        printf("\033[2J");
+        printf("Selected cell: %d, %d\n", selected[0], selected[1]);
+        drawPlayfield(p, selectedCell);
+    }
+
+    solve: ;
     Playfield* pptr = &p;
 
     char solved = bruteSolve(&pptr);
 
     p = *pptr;
 
-    drawPlayfield(p);
+    drawPlayfield(p, selected);
     printf("%s, %d cells solved.\n", solved ? "Playfield is solved" : "Playfield is not solved", p.solvedCells);
 
     if(p.solvedCells != 81) for(int i = 0; i < 9 * 9; i++) if(!cellSolved(p.cells[i])){
@@ -29,50 +57,7 @@ int main(){
 
     free(cells);
 
+    goto start;
+
     return 0;
-}
-
-/*
-    @brief Loads a cell array from a file
-    @param path: path to file to load from
-    @return: array of cells or null if failed
-*/
-Cell* loadCells(char* path){
-    Cell* cells = malloc(sizeof(Cell) * 9 * 9);
-    if(cells == NULL){
-        printf("Failed to allocate memory for cells\n");
-        return NULL;
-    }
-
-    for(int i = 0; i < 9*9; i++){
-        *(cells+i) = emptyCell(i%9, (int)i/9);
-        // printCell(&cells[i]);
-    }
-
-    FILE* f = fopen(path, "r");
-    if(!f){
-        printf("Failed to open file\n");
-        return NULL;
-    }
-
-    int data[3];
-    int count = 0;
-    do{
-        char input = fgetc(f);
-        if(input == ',') count++;
-        if(input == '\n' || input == EOF){
-            cells[data[0] + data[1]*9] = newCell(data[0], data[1], data[2]);
-            // printCell(cells[data[0] + data[1]*9]);
-            count = 0;
-            if(input == EOF) break;
-            continue;
-        }
-        if(input >= '0' && input <= '9'){
-            data[count] = input - '0';
-        }
-    } while(1);
-
-    fclose(f);
-
-    return cells;
 }
