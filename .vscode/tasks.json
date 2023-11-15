@@ -1,0 +1,26 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "CMake: debug",
+            "command": "cd debug && cmake .. -DCMAKE_BUILD_TYPE=Debug && make",
+            "problemMatcher": [
+                "$gcc"
+            ],
+        },
+        {
+            "type": "shell",
+            "label": "CMake: build",
+            "command": "cd build && cmake .. && make",
+        },
+        {
+            "type": "shell",
+            "label": "Timed Run",
+            "command": "time ./build/cudoku",
+            "dependsOn": [
+                "CMake: build"
+            ]
+        }
+    ],
+    "version": "2.0.0"
+}

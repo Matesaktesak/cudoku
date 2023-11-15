@@ -53,5 +53,4 @@ dkms.conf
 
 build/
 debug/
-tasks.json
 .vscode/settings.json
