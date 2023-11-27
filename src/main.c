@@ -6,7 +6,46 @@
 #include "./lib/solver.h"
 #include "./lib/ui.h"
 
-int main(){
+int main(int argc, char** argv){
+    if(argc > 1) {
+        if(strcmp(argv[1], "solve") == 0){
+            char path[100] = "./saves/";
+            strcat(path, argv[2]);
+            strcat(path, ".cudoku");
+            FILE* f = fopen(path, "r");
+
+            Cell* cells = loadCells(f);
+            Playfield p = playfieldFromCells(cells);
+            Playfield* pptr = &p;
+            char solved = bruteSolve(&pptr);
+            p = *pptr;
+            drawPlayfield(p, NULL);
+            printf("%s, %d cells solved.\n", solved ? "Playfield is solved" : "Playfield is not solved", p.solvedCells);
+            if(p.solvedCells != 81) for(int i = 0; i < 9 * 9; i++) if(!cellSolved(p.cells[i])){
+                printCell(p.cells[i]);
+            }
+            free(cells);
+            return 0;
+        }
+        if(strcmp(argv[1], "help") == 0){
+            if(argc == 3){
+                if(strcmp(argv[2], "solve") == 0){
+                    printf("Usage: cudoku solve [filename]\n");
+                    printf("Solves a playfield\n");
+                    return 0;
+                }
+            }
+            printf("Usage: cudoku [command]\n");
+            printf("Commands:\n");
+            printf("  solve: Solve a playfield\n");
+            printf("  help: Show this help\n");
+            // printf("  version: Show version\n");
+            return 0;
+        }
+        printf("Unknown command. Use 'cudoku help' for help.\n");
+        return 0;
+    }
+
     printf("\x1B[1mCudoku\x1B[0m\n");
     
     int firstStart = 1;
