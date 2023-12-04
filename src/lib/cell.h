@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifndef CUDOKU_CELL_H
 #define CUDOKU_CELL_H
@@ -9,7 +10,7 @@ typedef struct Cell{
     char x; // x coordinate
     char y; // y coordinate
     Options options; // Bitfield, rightmost = 1, leftmost = 9, solved cell has only one option
-    char solveBased; // 'p' = preset, 'l' = last option, 'o' = only in group
+    char solveBased; // 'p' = preset, 'l' = last option, 'o' = only in group, 'b' = brute force (recursive)
 } Cell;
 
 /*

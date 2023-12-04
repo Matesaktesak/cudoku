@@ -3,7 +3,7 @@
 Cell newCell(int x, int y, unsigned char value){
     Options options = 0b111111111;
     if(value != 0) options = 1 << (value-1);
-    return (Cell){.x = x, .y = y, .solveBased = (value != 0) ? 'p' : NULL, .options = options};
+    return (Cell){.x = x, .y = y, .solveBased = (value != 0) ? 'p' : 'n', .options = options};
 }
 
 Cell emptyCell(int x, int y) {
@@ -19,6 +19,7 @@ void printCell(Cell* cell){
         case 'p': solve = "P (preset value)"; break; // Last option
         case 'l': solve = "L (single option)"; break; // Last option
         case 'o': solve = "O (only in group)"; break; // Only cell with option in group
+        case 'b': solve = "B (brute force)"; break; // Brute force
         default: solve = "";
     }
     printf(" %s\n", solve);
@@ -69,7 +70,6 @@ Cell* loadCells(FILE* f){
 
     for(int i = 0; i < 9*9; i++){
         *(cells+i) = emptyCell(i%9, (int)i/9);
-        // printCell(&cells[i]);
     }
 
     int data[3];
