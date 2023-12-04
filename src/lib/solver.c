@@ -3,8 +3,6 @@
 char logicSolve(Playfield* p){
     if(p->solvedCells == 81) return 1; // If the playfield is already solved, return 1
     removeOptions(p);
-    
-    //drawPlayfield(*p);
 
     int reduction = 1;
     while(reduction && p->solvedCells < 81){
@@ -103,34 +101,49 @@ int onlyInReg(Cell* reg[]){
     return reduction;
 }
 
-int recourseCounter = 0;
+/*
+    The recursive approach is as follows:
+    1. Find the cell with the least number of options
+        - if there are multiple, pick the first one
+        - if there are none with few options, try guessing a cell with more than 2 options
+    2. Pick the an option and create a duplicate field with that option set
+    3. Try to solve the duplicate field using logic
+    4. Recourse if the duplicate field is not solved
+
+    If at any point the duplicate field is solved, return 1, break the recursion
+    And set the original field to the solved duplicate field (swap pointers)
+*/
+
+int recourseCounter = 0;  // Debugging/logging variable
 char recurse(Playfield** field){
     printf("Recoursing for the %d. time\n", ++recourseCounter); // Just for debugging
 
     Playfield* p = *field; // Just a 'macro', hopefully the compiler optimizes this
 
-    char minimumCount = 2;
+    const char minimumCount = 2; // TODO: Make this dynamic - I sort of hope, there is no logicaly solvable field with no cell with just two options
     for(int i = 0; i < 81; i++){ // For every cell
         if(cellSolved(p->cells[i])) continue;   // Skip solved cells
+
         if(cellOpCount(p->cells[i]) == minimumCount) { // If the cell has the minimum number of options
             for(int n = 0; n < 9; n++){ // For every option
                 if(!(p->cells[i]->options & (1 << n))) continue; // Only try options that are still available
 
-                Playfield* copy = malloc(sizeof(Playfield)); // Allocate space for a new playfield
-                copy = clonePlayfield(p); // Prepare a deep copy of the playfield
-                copy->cells[i]->options = 1 << n;  // Presume this option is correct
-                if(bruteSolve(&copy)){  // Try to brute solve the rest of the copied field - thus recursing
+                Playfield* copy = clonePlayfield(p); // Prepare a deep copy of the playfield
+                copy->cells[i]->options = 1 << n;   // Guess this option is correct
+                if(bruteSolve(&copy)){              // Try to brute solve the rest of the copied field - thus recursing
                     copy->cells[i]->solveBased = 'b'; // If it works, set the diagnostic type to 'brute force'
                     copy->solvedCells++; // And report the solved cell
-                    *field = copy;  // If it works, copy the solved field to the original
-                    return 1;   // Return 1 and so break the entire recursion
+                    
+                    *field = copy;  // If it worked, copy the solved field to the original
+                    return 1;   // Return 1 and so break the recursion
                 }
-                free(copy);
+                free(copy); // If it doesn't work, free the copy
             }
         }
     }
 
-    // TODO: In this case, it shouldn't overwrite the array
+    // If we got here, all options and guesses have been tried and none worked, therefore:
     printf("Playfield cannot be solved\n");
+    *field = p; // If the field cannot be solved, set the original field to the original field
     return 0;
 }
