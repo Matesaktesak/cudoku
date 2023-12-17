@@ -75,7 +75,8 @@ int main(int argc, char** argv){
             if(savePlayfield(p.cells, f)) printf("Saved playfield\n"); else printf("Failed to save playfield\n");
         }
         if(strcmp(input, "set") == 0) {
-            selectedCell->options = 1 << (getNumber("Value: ")-1);
+            int n = getNumber("Value: ");
+            selectedCell->options = n ? 1 << (n-1) : 0b111111111;
         }
 
         if(strcmp(input, "u") == 0) selected[1]--;
