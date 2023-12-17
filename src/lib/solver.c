@@ -125,6 +125,7 @@ char recurse(Playfield** field){
                     *field = copy;  // If it works, copy the solved field to the original
                     return 1;   // Return 1 and so break the entire recursion
                 }
+                free(copy);
             }
         }
     }
