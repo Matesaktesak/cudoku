@@ -16,10 +16,10 @@ void clearInput(){
     while((c = getchar()) != '\n' && c != EOF);
 }
 
-int savePlayfield(Cell* p[], FILE* f){
+int savePlayfield(Cell* p[], FILE* f, char preset){
     for(int i = 0; i < 9 * 9; i++){
         Cell c = **(p + i);
-        if(cellSolved(&c)) fprintf(f, "%d,%d,%d\n", c.x, c.y, cellValue(&c));
+        if(cellSolved(&c)) fprintf(f, "%d,%d,%d,%c\n", c.x, c.y, cellValue(&c), preset ? 'p' : c.solveBased);
     }
     fclose(f);
 

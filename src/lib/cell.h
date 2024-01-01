@@ -10,7 +10,7 @@ typedef struct Cell{
     char x; // x coordinate
     char y; // y coordinate
     Options options; // Bitfield, rightmost = 1, leftmost = 9, solved cell has only one option
-    char solveBased; // 'p' = preset, 'l' = last option, 'o' = only in group, 'b' = brute force (recursive)
+    char solveBased; // 'p' = preset, 'l' = last option, 'o' = only in group, 'u' = user set, 'b' = brute force (recursive)
 } Cell;
 
 /*
@@ -23,9 +23,10 @@ char checkAllValues(Cell* cells[]);
     @param x: x coordinate of cell
     @param y: y coordinate of cell
     @param value: value for the new cell
+    @param solveBased: why is the cell set?
     @return: new cell struct
 */
-Cell newCell(int x, int y, unsigned char value);
+Cell newCell(int x, int y, unsigned char value, char solveBased);
 
 /*
     @param x: x coordinate of cell

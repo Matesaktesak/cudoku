@@ -1,13 +1,13 @@
 #include "cell.h"
 
-Cell newCell(int x, int y, unsigned char value){
+Cell newCell(int x, int y, unsigned char value, char solveBased){
     Options options = 0b111111111;
     if(value != 0) options = 1 << (value-1);
-    return (Cell){.x = x, .y = y, .solveBased = (value != 0) ? 'p' : 'n', .options = options};
+    return (Cell){.x = x, .y = y, .solveBased = solveBased, .options = options};
 }
 
 Cell emptyCell(int x, int y) {
-    return newCell(x, y, 0);
+    return newCell(x, y, 0, 'n');
 }
 
 void printCell(Cell* cell){
@@ -19,6 +19,7 @@ void printCell(Cell* cell){
         case 'p': solve = "P (preset value)"; break; // Last option
         case 'l': solve = "L (single option)"; break; // Last option
         case 'o': solve = "O (only in group)"; break; // Only cell with option in group
+        case 'u': solve = "U (user set)"; break; // User set
         case 'b': solve = "B (brute force)"; break; // Brute force
         default: solve = "";
     }
@@ -62,7 +63,7 @@ char cellSolved(Cell* cell){
 }
 
 Cell* loadCells(FILE* f){
-    Cell* cells = malloc(sizeof(Cell) * 9 * 9);
+    Cell* cells = malloc(sizeof(Cell) * 81);
     if(cells == NULL){
         printf("Failed to allocate memory for cells\n");
         return NULL;
@@ -72,20 +73,21 @@ Cell* loadCells(FILE* f){
         *(cells+i) = emptyCell(i%9, (int)i/9);
     }
 
-    int data[3];
+    int data[4];
     int count = 0;
     do{
         char input = fgetc(f);
         if(input == ',') count++;
-        if(input == '\n' || input == EOF){
-            cells[data[0] + data[1]*9] = newCell(data[0], data[1], data[2]);
+        else if(input == '\n' || input == EOF){
+            cells[data[0] + data[1]*9] = newCell(data[0], data[1], data[2], data[3]);
             // printCell(cells[data[0] + data[1]*9]);
             count = 0;
             if(input == EOF) break;
             continue;
-        }
-        if(input >= '0' && input <= '9'){
+        } else if(input >= '0' && input <= '9'){
             data[count] = input - '0';
+        } else if(count == 3){
+            data[3] = input;
         }
     } while(1);
 

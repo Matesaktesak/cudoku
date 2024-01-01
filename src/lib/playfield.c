@@ -5,7 +5,7 @@ Playfield playfieldFromCells(Cell* cells){
     p.solvedCells = 0;
     for(int i = 0; i < 81; i++){
         Cell* cell = cells+i;
-        p.solvedCells += cell->solveBased == 'p';
+        p.solvedCells += cellSolved(cell);
 
         p.cells[cell->x + cell->y*9] = cell;
         //printCell(*cell);
@@ -31,10 +31,11 @@ void drawPlayfield(Playfield p, Cell* selected) {
             if(i % 3 != 0) printf("│"); else printf("┃");
             
             if(p.rows[r][i]->solveBased == 'p') printf("\x1B[1m"); // If the cell was preset, make it bold
+            char cV = cellValue(p.rows[r][i]);
             if(p.rows[r][i] != selected){
-                printf(" %c ", cellSolved(p.rows[r][i]) ? cellValue(p.rows[r][i]) + '0' : ' ');
+                printf(" %c ", cV ? cV + '0' : ' ');
             } else {
-                printf(ANSI_HIGHLIGHT " %c " ANSI_RESET, cellSolved(p.rows[r][i]) ? cellValue(p.rows[r][i]) + '0' : ' ');
+                printf(ANSI_HIGHLIGHT " %c " ANSI_RESET, cV ? cV + '0' : ' ');
             }
             if(p.rows[r][i]->solveBased == 'p') printf("\x1B[0m");
         }

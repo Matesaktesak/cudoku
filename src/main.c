@@ -98,11 +98,18 @@ int main(int argc, char** argv){
         if(strcmp(input, "save") == 0) {
             clearInput();
             FILE* f = getFile(1);
-            if(savePlayfield(p.cells, f)) printf("Saved playfield\n"); else printf("Failed to save playfield\n");
+            if(savePlayfield(p.cells, f, 0)) printf("Saved playfield\n"); else printf("Failed to save playfield\n");
+        }
+        if(strcmp(input, "save!") == 0) {
+            clearInput();
+            FILE* f = getFile(1);
+            if(savePlayfield(p.cells, f, 1)) printf("Saved playfield\n"); else printf("Failed to save playfield\n");
+            p = playfieldFromCells(loadCells(f));	
         }
         if(strcmp(input, "set") == 0) {
             int n = getNumber("Value: ");
             selectedCell->options = n ? 1 << (n-1) : 0b111111111;
+            selectedCell->solveBased = 'u';
         }
     }
 
