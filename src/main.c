@@ -77,8 +77,12 @@ int main(int argc, char** argv){
     Cell* cells = loadCells(f);
     Playfield p = playfieldFromCells(cells);
     Playfield* guide = clonePlayfield(&p);
+    // TODO: Remove non-preset cells from the check playfield - rigth now all loaded cells are assumed correctly solved
+    Playfield* check = clonePlayfield(&p);
     removeOptions(guide, 0);
     char cacheValid = 1;
+    char checkValid = 0;
+
     printf("Loaded field:\n");
 
     char input[100];
@@ -114,7 +118,7 @@ int main(int argc, char** argv){
             clearInput();
             FILE* f = getFile(1);
             if(savePlayfield(p.cells, f, 1)) printf("Saved playfield\n"); else printf("Failed to save playfield\n");
-            p = playfieldFromCells(loadCells(f));	
+            p = playfieldFromCells(loadCells(f));
             cacheValid = 0; // Invalidate cache
             continue;
         }
@@ -135,6 +139,13 @@ int main(int argc, char** argv){
             printCellOptions(guide->cols[selected[0]][selected[1]]);
             printf("\n");
         }
+        if(!strcmp(input, "check")){
+            if(!checkValid) bruteSolve(&check);
+            for(int i = 0; i < 9*9; i++){
+                if(cellSolved(p.cells[i]) && check->cells[i]->options != p.cells[i]->options){
+                    printf("Cell [%d, %d] is wrong\n", i%9, i/9);
+                }
+            }
         }
     }
 
@@ -154,6 +165,7 @@ int main(int argc, char** argv){
 
     free(cells);
     free(guide);
+    free(check);
 
     goto start;
 
