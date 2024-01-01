@@ -7,7 +7,9 @@
 #include "./lib/ui.h"
 
 int main(int argc, char** argv){
+    // Digest CLI arguments
     if(argc > 1) {
+        // Solve command
         if(strcmp(argv[1], "solve") == 0){
             char path[100] = "./saves/";
             strcat(path, argv[2]);
@@ -27,8 +29,11 @@ int main(int argc, char** argv){
             free(cells);
             return 0;
         }
+
+        // Help command
         if(strcmp(argv[1], "help") == 0){
             if(argc == 3){
+                // Help for solve command
                 if(strcmp(argv[2], "solve") == 0){
                     printf("Usage: cudoku solve [filename]\n");
                     printf("Solves a playfield\n");
@@ -39,9 +44,12 @@ int main(int argc, char** argv){
             printf("Commands:\n");
             printf("  solve: Solve a playfield\n");
             printf("  help: Show this help\n");
+            printf("Run without arguments to start in interactive mode\n");
             // printf("  version: Show version\n");
             return 0;
         }
+
+        // Unknown command
         printf("Unknown command. Use 'cudoku help' for help.\n");
         return 0;
     }
