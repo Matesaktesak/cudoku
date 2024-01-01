@@ -54,11 +54,14 @@ int main(int argc, char** argv){
         return 0;
     }
 
+
+    // Interactive mode
     printf("\x1B[1mCudoku\x1B[0m\n");
     
-    int firstStart = 1;
+    int firstStart = 1; // Set to 1 to load a playfield on first start
 
-    start: ;// goto start; is used to restart the program after a solve
+    start: ; // goto start; is used to restart the program after a solve
+
     Cell* selectedCell = NULL;
     char selected[2] = {4,4};
 
@@ -69,7 +72,6 @@ int main(int argc, char** argv){
     Cell* cells = loadCells(f);
     Playfield p = playfieldFromCells(cells);
     printf("Loaded field:\n");
-    drawPlayfield(p, NULL);
 
     char input[100];
     while(1){
