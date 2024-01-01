@@ -12,15 +12,16 @@
     @param cells: array of cells to remove option from
     @return number of cells solved by this operation
 */
-int removeOptionFromGroup(Options o, Cell* cells[]);
+int removeOptionFromGroup(Options o, Cell* cells[], char setSolved);
 
 
 /*
     @brief Removes invalid options from all cells in a playfield
     @param field: playfield to remove options from
+    @param setSolved: if set to 1, solved cells will be set as solved
     @return number of cells solved by this operation
 */
-int removeOptions(Playfield* field);
+int removeOptions(Playfield* field, char setSolved);
 
 /*
     @brief Checks if a cell hass an option no other cell in the region has and sets it as the value of the cell (disables all other options)

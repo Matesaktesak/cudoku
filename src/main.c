@@ -41,7 +41,7 @@ int main(int argc, char** argv){
                 }
 
                 if(strcmp(argv[2], "interactive") == 0){
-                    printf("Commands usable in interactive mode:\n  - U/w: Move cursor up\n  - D/s: Move cursor down\n  - L/a: Move cursor left\n  - R/d: Move cursor right\n  - set: Set value of selected cell\n  - solve: Solve playfield\n  - load: Load playfield\n  - save: Save playfield\n  - save!: Save playfield as preset\n  - exit: Exit program\n");
+                    printf("Commands usable in interactive mode:\n  - U/w: Move cursor up\n  - D/s: Move cursor down\n  - L/a: Move cursor left\n  - R/d: Move cursor right\n  - set: Set value of selected cell\n  - solve: Solve playfield\n  - load: Load playfield\n  - save: Save playfield\n  - save!: Save playfield as preset\n  - choises: displays the valid choises for the selected cell\n  - check: checks the field and prints a list of cell that are wrong\n  - exit: Exit program\n");
                     return 0;
                 }
             }
@@ -76,13 +76,17 @@ int main(int argc, char** argv){
 
     Cell* cells = loadCells(f);
     Playfield p = playfieldFromCells(cells);
+    Playfield* guide = clonePlayfield(&p);
+    removeOptions(guide, 0);
+    char cacheValid = 1;
     printf("Loaded field:\n");
 
     char input[100];
     while(1){
         // Update cursor and draw playfield
         selectedCell = p.cells[selected[0] + selected[1] * 9];
-        printf("\033[2J");
+        //printf("\033[2J");
+        // printf("\n\n\n\n\n");
         printf("Selected cell: %d, %d\n", selected[0], selected[1]);
         drawPlayfield(p, selectedCell);
         
@@ -104,17 +108,33 @@ int main(int argc, char** argv){
             clearInput();
             FILE* f = getFile(1);
             if(savePlayfield(p.cells, f, 0)) printf("Saved playfield\n"); else printf("Failed to save playfield\n");
+            continue;
         }
         if(strcmp(input, "save!") == 0) {
             clearInput();
             FILE* f = getFile(1);
             if(savePlayfield(p.cells, f, 1)) printf("Saved playfield\n"); else printf("Failed to save playfield\n");
             p = playfieldFromCells(loadCells(f));	
+            cacheValid = 0; // Invalidate cache
+            continue;
         }
         if(strcmp(input, "set") == 0) {
             int n = getNumber("Value: ");
             selectedCell->options = n ? 1 << (n-1) : 0b111111111;
             selectedCell->solveBased = 'u';
+            cacheValid = 0; // Invalidate cache
+            continue;
+        }
+        if(!strcmp(input, "choises")){
+            if(!cacheValid) {
+                free(guide);
+                guide = clonePlayfield(&p);
+                removeOptions(guide, 0);
+            }
+            printf("Choises for cell [%d, %d]: ", selected[0], selected[1]);
+            printCellOptions(guide->cols[selected[0]][selected[1]]);
+            printf("\n");
+        }
         }
     }
 
@@ -133,6 +153,7 @@ int main(int argc, char** argv){
     }
 
     free(cells);
+    free(guide);
 
     goto start;
 

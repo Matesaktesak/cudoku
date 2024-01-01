@@ -2,7 +2,7 @@
 
 char logicSolve(Playfield* p){
     if(p->solvedCells == 81) return 1; // If the playfield is already solved, return 1
-    removeOptions(p);
+    removeOptions(p, 1);
 
     int reduction = 1;
     while(reduction && p->solvedCells < 81){
@@ -21,7 +21,7 @@ char logicSolve(Playfield* p){
         }
 
         p->solvedCells += reduction;
-        reduction += removeOptions(p); // removeOptions already adds its result to p->solvedCells...
+        reduction += removeOptions(p, 1); // removeOptions already adds its result to p->solvedCells...
     }
 
     bigLoopExit:
@@ -37,7 +37,7 @@ char bruteSolve(Playfield** p){
     return recurse(p);
 }
 
-int removeOptionFromGroup(Options o, Cell* cells[]){ // Removes an option from a group of cells
+int removeOptionFromGroup(Options o, Cell* cells[], char setSolved){ // Removes an option from a group of cells
     int solved = 0; // Number of cells solved (for reporting)
 
     for(int i = 0; i< 9; i++){ // For each cell in the group
@@ -46,7 +46,7 @@ int removeOptionFromGroup(Options o, Cell* cells[]){ // Removes an option from a
 
         cell->options &= ~o; // Remove option from cell
 
-        if(cellSolved(cell)){ // If cell has only one option left
+        if(cellSolved(cell) & setSolved){ // If cell has only one option left
             cell->solveBased = 'l';
             solved++;
         }
@@ -55,7 +55,7 @@ int removeOptionFromGroup(Options o, Cell* cells[]){ // Removes an option from a
     return solved;
 }
 
-int removeOptions(Playfield* field){
+int removeOptions(Playfield* field, char setSolved){
     //printf("Removing invalid options...\n");
 
     int reduction = 1;
@@ -64,11 +64,11 @@ int removeOptions(Playfield* field){
     while(reduction) {
         reduction = 0;
 
-        for(char i = 0; i < 9*9; i++) if(cellSolved(field->cells[i])){
+        for(char i = 0; i < 9*9; i++) if(setSolved ? cellSolved(field->cells[i]) : field->cells[i]->solveBased != 'n'){
             const Cell* c = field->cells[i];
-            reduction += removeOptionFromGroup(c->options, field->rows[c->y]);
-            reduction += removeOptionFromGroup(c->options, field->cols[c->x]);
-            reduction += removeOptionFromGroup(c->options, field->blocks[(c->x/3) + (c->y/3)*3]);
+            reduction += removeOptionFromGroup(c->options, field->rows[c->y], setSolved);
+            reduction += removeOptionFromGroup(c->options, field->cols[c->x], setSolved);
+            reduction += removeOptionFromGroup(c->options, field->blocks[(c->x/3) + (c->y/3)*3], setSolved);
         }
 
         //printf("Reduction: %d\n", reduction);
@@ -92,7 +92,7 @@ int onlyInReg(Cell* reg[]){
             reg[n]->solveBased = 'o'; // Set the diagnostic type to 'only in region'
 
             // Remove this option from all other cells in the region (and report the result as if done by this op... xd)
-            reduction += removeOptionFromGroup(reg[n]->options, reg);
+            reduction += removeOptionFromGroup(reg[n]->options, reg, 1);
 
             reduction++; // Report the solved cell
         }
