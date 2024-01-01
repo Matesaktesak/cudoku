@@ -73,7 +73,23 @@ int main(int argc, char** argv){
 
     char input[100];
     while(1){
+        // Update cursor and draw playfield
+        selectedCell = p.cells[selected[0] + selected[1] * 9];
+        printf("\033[2J");
+        printf("Selected cell: %d, %d\n", selected[0], selected[1]);
+        drawPlayfield(p, selectedCell);
+        
+        // Get input
         if(!scanf("%s", input)) continue;
+        
+        // Move cursor
+        if(strcmp(input, "u") == 0) selected[1]+=8;
+        if(strcmp(input, "d") == 0) selected[1]++;
+        if(strcmp(input, "l") == 0) selected[0]+=8;
+        if(strcmp(input, "r") == 0) selected[0]++;
+        selected[0] %= 9;
+        selected[1] %= 9;
+        
         if(strcmp(input, "exit") == 0) return 0;
         if(strcmp(input, "solve") == 0) goto solve;
         if(strcmp(input, "load") == 0) goto start;
@@ -86,16 +102,6 @@ int main(int argc, char** argv){
             int n = getNumber("Value: ");
             selectedCell->options = n ? 1 << (n-1) : 0b111111111;
         }
-
-        if(strcmp(input, "u") == 0) selected[1]--;
-        if(strcmp(input, "d") == 0) selected[1]++;
-        if(strcmp(input, "l") == 0) selected[0]--;
-        if(strcmp(input, "r") == 0) selected[0]++;
-        selectedCell = p.cells[selected[0] + selected[1] * 9];
-
-        printf("\033[2J");
-        printf("Selected cell: %d, %d\n", selected[0], selected[1]);
-        drawPlayfield(p, selectedCell);
     }
 
     solve: ;
