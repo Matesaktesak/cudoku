@@ -39,11 +39,16 @@ int main(int argc, char** argv){
                     printf("Solves a playfield\n");
                     return 0;
                 }
+
+                if(strcmp(argv[2], "interactive") == 0){
+                    printf("Commands usable in interactive mode:\n  - U/w: Move cursor up\n  - D/s: Move cursor down\n  - L/a: Move cursor left\n  - R/d: Move cursor right\n  - set: Set value of selected cell\n  - solve: Solve playfield\n  - load: Load playfield\n  - save: Save playfield\n  - save!: Save playfield as preset\n  - exit: Exit program\n");
+                    return 0;
+                }
             }
             printf("Usage: cudoku [command]\n");
             printf("Commands:\n");
             printf("  solve: Solve a playfield\n");
-            printf("  help: Show this help\n");
+            printf("  help [object]: Show this help\n  - solve: Help for solve command\n  - interactive: Help for interactive mode\n");
             printf("Run without arguments to start in interactive mode\n");
             // printf("  version: Show version\n");
             return 0;
@@ -85,10 +90,10 @@ int main(int argc, char** argv){
         if(!scanf("%s", input)) continue;
         
         // Move cursor
-        if(strcmp(input, "u") == 0) selected[1]+=8;
-        if(strcmp(input, "d") == 0) selected[1]++;
-        if(strcmp(input, "l") == 0) selected[0]+=8;
-        if(strcmp(input, "r") == 0) selected[0]++;
+        if(!strcmp(input, "U") || !strcmp(input, "w")) selected[1]+=8;
+        if(!strcmp(input, "D") || !strcmp(input, "s")) selected[1]++;
+        if(!strcmp(input, "L") || !strcmp(input, "a")) selected[0]+=8;
+        if(!strcmp(input, "R") || !strcmp(input, "d")) selected[0]++;
         selected[0] %= 9;
         selected[1] %= 9;
         
