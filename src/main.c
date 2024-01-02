@@ -21,10 +21,12 @@ int main(int argc, char** argv){
             Playfield* pptr = &p;
             char solved = bruteSolve(&pptr);
             p = *pptr;
-            drawPlayfield(p, NULL);
-            printf("%s, %d cells solved.\n", solved ? "Playfield is solved" : "Playfield is not solved", p.solvedCells);
-            if(p.solvedCells != 81) for(int i = 0; i < 9 * 9; i++) if(!cellSolved(p.cells[i])){
-                printCell(p.cells[i]);
+            if(strcmp(argv[3], "-s") != 0){
+                drawPlayfield(p, NULL);
+                printf("%s, %d cells solved.\n", solved ? "Playfield is solved" : "Playfield is not solved", p.solvedCells);
+                if(p.solvedCells != 81) for(int i = 0; i < 9 * 9; i++) if(!cellSolved(p.cells[i])){
+                    printCell(p.cells[i]);
+                }
             }
             free(cells);
             return 0;
