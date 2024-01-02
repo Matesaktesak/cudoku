@@ -1,4 +1,11 @@
 # Cudoku
+
+[Cudoku je ke stažení v aktuální versi na GitHubu](https://github.com/Matesaktesak/cudoku)
+
+Cudoku je výsledek semestrální práce pro předmět A8B14ADP na FEL ČVUT v roce 2023/24. Toto readme je povinná dokumentace.
+
+---
+
 Sudoku je jedna z klasických her, kterou většina lidí zná z denního tisku. Dočkala se i moderních verzí v podobě různých mobilních aplikací a podobně. Zde je krátký souhrn pravidel hry:
 1) Tabulka sestavá z 9 sloupců a 9 řádků
 2) V tabulce je vyznačených dále devět "čtverců” nebo také "bloků” o velikosti 3*3 buňky
