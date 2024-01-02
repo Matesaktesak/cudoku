@@ -72,10 +72,10 @@ Playfield* clonePlayfield(Playfield* original){
     // Return a deep copy of the playfield
     Playfield* copy = malloc(sizeof(Playfield));
     *copy = (Playfield){
-        .cells = malloc(sizeof(Cell*)*81),
-        .rows = malloc(sizeof(Cell*)*9*9),
-        .cols = malloc(sizeof(Cell*)*9*9),
-        .blocks = malloc(sizeof(Cell*)*9*9),
+        .cells = (Cell*) malloc(sizeof(Cell*)*81),
+        .rows = (Cell*) malloc(sizeof(Cell*)*9*9),
+        .cols = (Cell*) malloc(sizeof(Cell*)*9*9),
+        .blocks = (Cell*) malloc(sizeof(Cell*)*9*9),
         .solvedCells = original->solvedCells
     };
     Cell* cellsCopy = (Cell*)malloc(sizeof(Cell)*81);
