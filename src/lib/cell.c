@@ -59,10 +59,6 @@ void printCellOptions(Cell* cell){
 }
 
 char cellSolved(Cell* cell){
-    if(cell == NULL) {
-        printf("Cell is NULL\n");
-        return NULL;
-    }
     return !(cell->options&(cell->options-1)); // If a cells options are not a power of 2, it has multiple options and therefore isn't solved
 }
 
