@@ -35,13 +35,13 @@ Tím bude splněn cíl číslo 1. Pro splnění cílů 2,3,5 a 6 je radno přede
 - Ověření, že je pole zcela vyřešené
 
 ## Popis řešení
-Kód je dělen do souborů podle dílčích funkčních jednotek. Soubory jsou opatřeny příslušnými header .h soubory s deklaracemi. Všechny ```#include``` statementy jsou též v .h. Osobně mi přijde přehledné psát do jednoho souboru vždy kód podporující jednu strukturu nebo koncept. Testovací prostředí bylo virtualizované, OS **Debian** Bookworm na architektuře AMD x86. Jako kompilátor jsem využíval **GCC**, jehož vstupy byly automaticky generovány skrz CMake a zpracovány Make. Program je kompatibilní i s optimalizační strategií O3 v GCC, zlepšení proti výchozímu programu je cca 10%. V mém řešení jsem se snažil vyvážit rychlost se spotřebou paměti.
+Kód je dělen do souborů podle dílčích funkčních jednotek. Soubory jsou opatřeny příslušnými header .h soubory s deklaracemi. Všechny `#include` statementy jsou též v .h. Osobně mi přijde přehledné psát do jednoho souboru vždy kód podporující jednu strukturu nebo koncept. Testovací prostředí bylo virtualizované, OS **Debian** Bookworm na architektuře AMD x86. Jako kompilátor jsem využíval **GCC**, jehož vstupy byly automaticky generovány skrz CMake a zpracovány Make. Program je kompatibilní i s optimalizační strategií O3 v GCC, zlepšení proti výchozímu programu je cca 10%. V mém řešení jsem se snažil vyvážit rychlost se spotřebou paměti.
 
 Základem je uložení sudoku v operační paměti. Zvolil jsem přístup, který sice spotřebuje více paměti, ale umožňuje pak jednodušší a rychlejší práci se hrou. Jsou definovány struktury Cell a Playfield. K ukládání hodnot buněk používám
 ```c
 typedef usigned int Options;
 ```
-Zvolil jsem použití jednotlivých bitů pro různé možnosti, k čemuž se vrátím později, každopádně LSB je 1, ```1<<8``` je devítka. Buňky jako takové jsou uloženy ve struktuře
+Zvolil jsem použití jednotlivých bitů pro různé možnosti, k čemuž se vrátím později, každopádně LSB je 1, `1<<8` je devítka. Buňky jako takové jsou uloženy ve struktuře
 ```c
 typedef struct {
     char x;
@@ -64,18 +64,18 @@ typedef struct {
 } Playfield;
 ```
 
-pak drží jednotlivé buňky a počet vyřešených buněk. Také obsahuje trojici dvourozměrných polí odkazů na jednotlivé buňky, jedno pro sloupce, řádky a čtverce. Tato pole jsou vždy jednorázově naplněna při tvorbě herního pole. Slouží jako "index" pro rychlé vyhledávání buněk. Pole ```cells[9*9]``` drží také tytéž buňky a není nutné, ale usnadňuje práci při smyčkování přes všechny buňky - *uvažoval jsem o jeho odstranění a pravděpodobně to bude jedna z budoucích optimalizací*.
+pak drží jednotlivé buňky a počet vyřešených buněk. Také obsahuje trojici dvourozměrných polí odkazů na jednotlivé buňky, jedno pro sloupce, řádky a čtverce. Tato pole jsou vždy jednorázově naplněna při tvorbě herního pole. Slouží jako "index" pro rychlé vyhledávání buněk. Pole `cells[9*9]` drží také tytéž buňky a není nutné, ale usnadňuje práci při smyčkování přes všechny buňky - *uvažoval jsem o jeho odstranění a pravděpodobně to bude jedna z budoucích optimalizací*.
 
-Funkce ```main``` na začátku inicializuje herní pole ze souboru. Pro soubory jsem zvolil příponu **.cudoku** (sudoku v céčku). Jedná se v podstatě o CSV, které drží x-ové a y-ové souřadnice buněk, jejich hodnoty (NIKOLIV možnosti, nevyřešené buňky neukládáme) a jejich výchozí stav ad. ```Cell.solveBased```. Pole je načítáno ze složky ```./saves/```, proto není žádoucí zadávat cestu k souboru ani příponu, postačí jméno "levelu". Ve výchozím stavu je připraveno 7 herních polí:
+Funkce `main` na začátku inicializuje herní pole ze souboru. Pro soubory jsem zvolil příponu **.cudoku** (sudoku v céčku). Jedná se v podstatě o CSV, které drží x-ové a y-ové souřadnice buněk, jejich hodnoty (NIKOLIV možnosti, nevyřešené buňky neukládáme) a jejich výchozí stav ad. `Cell.solveBased`. Pole je načítáno ze složky `./saves/`, proto není žádoucí zadávat cestu k souboru ani příponu, postačí jméno "levelu". Ve výchozím stavu je připraveno 7 herních polí:
 -	preset[1-4]
 -	evil[1-2]
 -	empty
 
-Pro začátek "od nuly" lze načíst soubor ```empty.cudoku```, který neobsahuje žádné buňky. Presety 1 a 2 jsou řešitelné logicky (bez hádání a rekurse), trojka spustí dlouhou rekursi (cca 100k kroků), 4 vyžaduje dva rekursivní kroky a pole označená evil pochází z internetu a jsou údajně nejtěžšími sudoku, která jsou "dobře zadaná". 
+Pro začátek "od nuly" lze načíst soubor `empty.cudoku`, který neobsahuje žádné buňky. Presety 1 a 2 jsou řešitelné logicky (bez hádání a rekurse), trojka spustí dlouhou rekursi (cca 100k kroků), 4 vyžaduje dva rekursivní kroky a pole označená evil pochází z internetu a jsou údajně nejtěžšími sudoku, která jsou "dobře zadaná". 
 
-Do souboru lze uložit příkazem ```save``` a následným zadáním jména. 
+Do souboru lze uložit příkazem `save` a následným zadáním jména. 
 
-Dále lze uložit jako zadání, kdy se všechna pole, bez ohledu na jejich původ uloží jako přednastavené buňky. Tedy ```Cell.solveBased``` je ignorováno a všude je uložena hodnota ```'p'``` tedy "preset".
+Dále lze uložit jako zadání, kdy se všechna pole, bez ohledu na jejich původ uloží jako přednastavené buňky. Tedy `Cell.solveBased` je ignorováno a všude je uložena hodnota `'p'` tedy "preset".
 
 Tabulka jako taková se tiskne do konzole pomocí "grafických" boxdrawing ASCII znaků a různých modifikátorů/escape sekvencí pro tučné písmo, vyznačení kurzoru, vymazání terminálu a podobně.
 
@@ -83,20 +83,20 @@ Tabulka jako taková se tiskne do konzole pomocí "grafických" boxdrawing ASCII
 
 ### Solver
 Součástí mého řešení je také komponeta pro řešení zadaného sudoku. Na této komponentě jsem strávil solidně nejvíce času a ovlivnila většinu ostatních strukturálních rozhodnutí v celém programu. Implementuje tři řešící metody, které dohramady dokážou vyřešit každé *dobře zadané* sudoku. Jedná se o funkce: 
-- ```removeOptions```: Funkce všechny buňky očistí od možností, které v nich nemohou logicky existovat (například v řádku, který už obsahuje číslo 3 nelze předpokládat další buňku s trojkou)
-- ```onlyInReg```: Vyhledává buňky, které jsou v dané skupině jedinné s potenciálem držet nějaké číslo. Například když pouze jedna buňka ve sloupci může obsahovat číslo 3, pak ji obsahovat musí
-- ```recourse```: Vybere buňku s nejnižším počtem možností a zkusí je postupně dosazovat. To se opakuje, dokud není celé pole vyřešené
+- `removeOptions`: Funkce všechny buňky očistí od možností, které v nich nemohou logicky existovat (například v řádku, který už obsahuje číslo 3 nelze předpokládat další buňku s trojkou)
+- `onlyInReg`: Vyhledává buňky, které jsou v dané skupině jedinné s potenciálem držet nějaké číslo. Například když pouze jedna buňka ve sloupci může obsahovat číslo 3, pak ji obsahovat musí
+- `recourse`: Vybere buňku s nejnižším počtem možností a zkusí je postupně dosazovat. To se opakuje, dokud není celé pole vyřešené
 
-Odstraňování a vyhledávání možností je primární důvod proč hodnotu buněk ukládám jako bitfield v ```Cell.options```. Například odstranění možnosti ```n``` je pak extrémně rychlé:
+Odstraňování a vyhledávání možností je primární důvod proč hodnotu buněk ukládám jako bitfield v `Cell.options`. Například odstranění možnosti `n` je pak extrémně rychlé:
 ```c
 exampleCell.options &= ~(1 << (n-1)); // Odstraní n-tou možnost
 ```
-podobně je rychlé ověření, zdali je buňka již vyřešená, protože potom musí ```Cell.options``` být mocnina dvou:
+podobně je rychlé ověření, zdali je buňka již vyřešená, protože potom musí `Cell.options` být mocnina dvou:
 ```c
 !(cell.options & (cell.options-1));
 ```
 
-Kdyby program měl sudoku pouze řešit a nemusel být hratelnout hrou, dala by se struktura buněk ztenčit o ```Cell.solveBased```, tato proměnná původně vznikla jako čistě diagnostický údaj.
+Kdyby program měl sudoku pouze řešit a nemusel být hratelnout hrou, dala by se struktura buněk ztenčit o `Cell.solveBased`, tato proměnná původně vznikla jako čistě diagnostický údaj.
 
 ### Měření rychlosti solveru
 
@@ -104,10 +104,10 @@ Také jsem ze zajímavosti napsal kratičký script na evaluaci rychlosti mého 
 ```bash
 time ./time.sh
 ```
-Script se pokusí 1000x vyřešit zadání ```preset4``` a vrátí jak dlouho to trvalo. Ve virtuálním vývojovém prostředí to trvalo cca 10,5s teda cca 10,5ms pokaždé a to včetně načítání dat z disku a inicializace herního pole - tedy včetně budování indexů.
+Script se pokusí 1000x vyřešit zadání `preset4` a vrátí jak dlouho to trvalo. Ve virtuálním vývojovém prostředí to trvalo cca 10,5s teda cca 10,5ms pokaždé a to včetně načítání dat z disku a inicializace herního pole - tedy včetně budování indexů.
 
 ## Popis ovládání
-Kompilovaná a optimalizovaná verze programu je ```./build/cudoku```
+Kompilovaná a optimalizovaná verze programu je `./build/cudoku`
 Build je nejlepší vyvolat následovně:
 ```bash
 mkdir build
@@ -116,20 +116,20 @@ cmake -D CMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-Po spuštění programu bez parametrů zadejte název hry, kterou chcete načíst. ```empty``` načte prázdné hřiště. Poté jsou dostupné následující příkazy:
-- ```load```: Načte pole ze souboru
-- ```save```: Uloží pole do souboru
-- ```save!```: Uloží pole do souboru jako zadání
-- ```exit```: ukončí program
-- ```set [v]```: Nastaví právě vybranou buňku na hodnotu ```[v]```, pro ```[v] == 0``` buňku vymaže
-- ```D```/```U```/```L```/```R```: Posune kursor dolů/nahoru/vlevo/vpravo
-- ```w```/```a```/```s```/```d```: Posune kursor nahoru/vlevo/dolů/vpravo
-- ```solve```: Pokusí se vyřešit pole
+Po spuštění programu bez parametrů zadejte název hry, kterou chcete načíst. `empty` načte prázdné hřiště. Poté jsou dostupné následující příkazy:
+- `load`: Načte pole ze souboru
+- `save`: Uloží pole do souboru
+- `save!`: Uloží pole do souboru jako zadání
+- `exit`: ukončí program
+- `set [v]`: Nastaví právě vybranou buňku na hodnotu `[v]`, pro `[v] == 0` buňku vymaže
+- `D`/`U`/`L`/`R`: Posune kursor dolů/nahoru/vlevo/vpravo
+- `w`/`a`/`s`/`d`: Posune kursor nahoru/vlevo/dolů/vpravo
+- `solve`: Pokusí se vyřešit pole
     - Pokud pole lze vyřešit, zobrazí jeho řešenou podobu
     - Pokud pole nelze vyřešit, zobrazí senam nevyřešených buněk
     - U polí s chybou může dojít na velmi dlouhou rekursi, která vyzkouší všechny možnosti a program pak prohlásí pole za neřešitelné
     - Jako výchozí pro dořešení pole se pokládá aktuální stav, včetně uživatelem vyplněných buňěk
-- ```choises```: nápověda v podobně všech čísel, která lze do dané buňky dosadit
-- ```check```: vytiskne seznam chybně vyplňěných buněk
+- `choises`: nápověda v podobně všech čísel, která lze do dané buňky dosadit
+- `check`: vytiskne seznam chybně vyplňěných buněk
 
 Podrobnější popis ovládání a návod k jednotlivým příkazům lze zobrazit příkazem ./build/cudoku help
