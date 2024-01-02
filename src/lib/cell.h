@@ -6,7 +6,7 @@
 
 typedef unsigned int Options;
 
-typedef struct Cell{
+typedef struct {
     char x; // x coordinate
     char y; // y coordinate
     Options options; // Bitfield, rightmost = 1, leftmost = 9, solved cell has only one option

@@ -5,7 +5,7 @@
 #ifndef CUDOKU_PLAYFIELD_H
 #define CUDOKU_PLAYFIELD_H
 
-typedef struct Playfield{
+typedef struct {
     Cell* rows[9][9];
     Cell* cols[9][9];
     Cell* blocks[9][9];
