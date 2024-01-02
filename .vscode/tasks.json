@@ -11,12 +11,12 @@
         {
             "type": "shell",
             "label": "CMake: build",
-            "command": "cd build && cmake .. && make",
+            "command": "cd build && cmake -D CMAKE_BUILD_TYPE=Release .. && make",
         },
         {
             "type": "shell",
             "label": "Timed Run",
-            "command": "time ./build/cudoku",
+            "command": "time ./time.sh",
             "dependsOn": [
                 "CMake: build"
             ]
