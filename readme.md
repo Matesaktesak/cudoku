@@ -101,6 +101,13 @@ Script se pokusí 1000x vyřešit zadání ```preset4``` a vrátí jak dlouho to
 
 ## Popis ovládání
 Kompilovaná a optimalizovaná verze programu je ```./build/cudoku```
+Build je nejlepší vyvolat následovně:
+```bash
+mkdir build
+cd build
+cmake -D CMAKE_BUILD_TYPE=Release ..
+make
+```
 
 Po spuštění programu bez parametrů zadejte název hry, kterou chcete načíst. ```empty``` načte prázdné hřiště. Poté jsou dostupné následující příkazy:
 - ```load```: Načte pole ze souboru
