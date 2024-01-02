@@ -114,9 +114,9 @@ int onlyInReg(Cell* reg[]){
     And set the original field to the solved duplicate field (swap pointers)
 */
 
-int recourseCounter = 0;  // Debugging/logging variable
+//int recourseCounter = 0;  // Debugging/logging variable
 char recurse(Playfield** field){
-    printf("Recoursing for the %d. time\n", ++recourseCounter); // Just for debugging
+    //printf("Recoursing for the %d. time\n", ++recourseCounter); // Just for debugging
 
     Playfield* p = *field; // Just a 'macro', hopefully the compiler optimizes this
 
